@@ -1,0 +1,16 @@
+{
+    "request": {
+        "trace": {
+            "traceId": "3dfe276e-4d61-426f-aaa5-d8e5845b0f03",
+            "timestamp": "06/12/2022 17:43:04",
+            "moduleId": "PACIENTES",
+            "serviceId": "API-DOCTORES-CUIDA-OS",
+            "consumerId": "WEB",
+            "channelId": "2"
+        },
+        "payload": {
+            "search": "papp",
+            "type": 1
+        }
+    }
+}

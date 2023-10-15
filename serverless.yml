@@ -1,0 +1,76 @@
+service: ${self:custom.projectName.value}-${self:provider.stage}
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${self:custom.regionFullname.${self:provider.stage}}
+  stage: ${opt:stage,'desa'}
+  timeout: 120
+  memorySize: 512
+  versionFunctions: false
+  tracing: true
+  iam:
+    role: arn:aws:iam::744209629115:role/${self:custom.lambdaType.value}-lambda-access-${self:provider.stage}-role
+  deploymentBucket:
+    name: bingo-${self:provider.stage}-lambda
+    serverSideEncryption: AES256
+  stackTags:
+    NAME: ${self:custom.projectName.value}-${self:provider.stage}
+    STAGE: ${self:provider.stage}
+  environment:
+    # HEALTH_DB_DATASOURCE: ${self:custom.healthDbDatasource}
+    STAGE: ${self:provider.stage}
+  configValidationMode: error
+
+custom:
+  lambdaType:
+    value: developer
+  projectName:
+    value: bingo
+
+  regionFullname:
+    desa: us-east-2
+    test: us-east-2
+    prod: us-east-1
+
+  # healthDbDatasource: /digital-health/${self:provider.stage}/database/${self:custom.channelName.value}-db-datasource
+
+package:
+  individually: true
+  patterns:
+    - "!./**"
+    - "dist/**"
+    - "!dist/src/lambdas"
+
+functions:
+  tokenAuthorizer:
+    handler: dist/src/lambdas/tokenAuthorizer.handler
+
+  createBingoGame:
+    handler: src/handlers/createBingoGame.handler
+    events:
+      - httpApi:
+          path: /create
+          method: post
+          authorizer: tokenAuth
+
+  createBingoCard:
+    handler: src/handlers/createBingoCard.handler
+    events:
+      - httpApi:
+          path: /card
+          method: post
+
+  checkBingoWinner:
+    handler: src/handlers/checkBingoWinner.handler
+    events:
+      - httpApi:
+          path: /check
+          method: post
+
+  callBingoNumbers:
+    handler: src/handlers/callBingoNumbers.handler
+    events:
+      - httpApi:
+          path: /call/{id}
+          method: get
