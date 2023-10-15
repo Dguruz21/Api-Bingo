@@ -1,137 +1,89 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: api bingo
+  title: API Bingo
   description: API para el juego de bingo
   contact:
-    name: Diego Acosta 
-    email: dacosta@hotmail.com
+    name: Diego Acosta
+    email: dguruz2108@hotmail.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
   - url: https://ysucgz8ir0.execute-api.us-east-1.amazonaws.com
-    description: desa
-
 paths:
-  /create:
+  /create-game:
     post:
-      tags:
-        - "Crear juego"
-      summary: Crear juego
-      description: Creara registro de un nuevo juego
-      operationId: crea
-      # requestBody:
-      #  $ref: "#/components/requestBodies/RequestBuscarDoctores"
+      summary: Create a new Bingo game
       responses:
-        201:
-          $ref: "#/components/responses/ResponseCreateGameOk"
-        500:
-          $ref: "#/components/responses/ResponseInternalServerCreateGame"
-
-components:
-  # requestBodies:
-  #   RequestBuscarDoctores:
-  #     required: true
-  #     content:
-  #       application/json:
-  #         schema:
-  #           $ref: "#/components/schemas/SchemaRequestBuscarDoctores"
-  
-  responses:
-    ResponseCreateGameOk:
-      description: Respuestas de solicitudes con éxito
-      content:
-        application/json:
+        '201':
+          description: Game created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gameId:
+                    type: string
+                    description: The ID of the newly created game
+        '500':
+          description: Internal Error
+          
+  /create-card:
+    post:
+      summary: Create a new Bingo card
+      responses:
+        '201':
+          description: Card created successfully
+        '500':
+          description: Internal Error
+      requestBody:
+        description: JSON request to create a Bingo Card
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The player declaring Bingo
+         
+  /call/{gameId}:
+    get:
+      summary: Call numbers without repetition
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          description: The ID of the player
           schema:
-            $ref: "#/components/schemas/SchemaResponseCreateGameOk"
-          examples:
-            Juego creado:
-              value:
-                response:
-                  game_id: bc8d4249-c8dc-4cef-afc9-be042914d182
-    
-    ResponseInternalServerCreateGame:
-      description: Internal Server
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SchemaGenericExceptionCreateGame'
-            
-    # BadRequestCrearTarjeta:
-    #   description: Campos requeridos en el payload
-    #   content:
-    #     application/json:
-    #       schema:
-    #         $ref: "#/components/schemas/SchemaResponseError"   
-    #       example:
-    #         response:
-    #           payload:
-    #             "..."
-
-  schemas:
-    # SchemaRequestBuscarDoctores:
-    #   type: object
-    #   properties:
-    #     request:
-    #       type: object
-    #       properties:
-    #         trace: 
-    #           $ref: "#/components/schemas/SchemaTrace"
-    #         payload:
-    #           type: object
-    #           properties:
-    #             busqueda:
-    #               type: string
-    #               description: "[Requerido] es la palabra para el criterio de busqueda"
-    #               example: "Portilla"
-
-    SchemaResponseCreateGameOk:
-      type: object
-      properties:
-        game_id: string
-        description: Es el id del juego creado
-        example: "bc8d4249-c8dc-4cef-afc9-be042914d182"
-
-    # SchemaResponseError:
-    #   type: object
-    #   properties:
-    #     statusCode:
-    #       type: number
-    #       enum:
-    #         - 204
-    #         - 400
-    #         - 409
-    #     body:
-    #       type: object
-    #       properties:
-    #         response:
-    #           type: object
-    #           properties:
-    #             trace:
-    #               $ref: "#/components/schemas/SchemaTrace"
-    #             payload:
-    #               type: array
-    #               description: ""
-    #               items:
-    #                 properties:
-    #                   idMedico: 
-    #                     type: number
-    #                     description: Es el id del medico
-    #                     example: 26
-    #                   idPersona:
-    #                     type: number
-    #                     description: Es el id de las personas
-    #                     example: 169
-    #                   nombres:
-    #                     type: string
-    #                     description: Es el texto con el nombre completo del médico
-    #                     example: "Juan Armando Perez Galindo"
-    #             status:
-    #               $ref: "#/components/schemas/SchemaStatus"              
-
-    SchemaGenericExceptionCreateGame:
-      type: object
-      properties:
-        messages: string 
-        example: "Error al crear el juego de Bingo ..."
+            type: string
+      responses:
+        '200':
+          description: A new ball added
+        '404':
+          description: Game not found
+  /check-winner:
+    post:
+      summary: Check if there is a winner
+      responses:
+        '200':
+          description: ¡BINGOOOOOOOOO!
+          
+        '400':
+          description: NO LUCK THIS TIME
+      requestBody:
+        description: JSON request to create a Bingo Card
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_game:
+                  type: string
+                  description: The player declaring Bingo
+                id_card:
+                  type: string
+                  description: The player declaring Bingo
