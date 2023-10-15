@@ -1,5 +1,5 @@
 {
-    "name": "api-examenes-business",
+    "name": "api-bingo",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -9,7 +9,7 @@
         "deploy": "serverless deploy -v",
         "build-layer": "rm -rdf ./dependencies/nodejs/node_modules && npm install && mv -f node_modules ./dependencies/nodejs/node_modules",
         "undeploy": "serverless remove",
-        "test-lambda:recordsExam": "serverless invoke local --function recordsExam --path tests/mocks/requests/mockRecordsExam.json"
+        "test-lambda:createBingoGame": "serverless invoke local --function createBingoGame --stage prod"
     },
     "keywords": [],
     "author": "",

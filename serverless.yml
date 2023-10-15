@@ -20,6 +20,7 @@ provider:
   environment:
     # HEALTH_DB_DATASOURCE: ${self:custom.healthDbDatasource}
     STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
   configValidationMode: error
 
 custom:
@@ -29,8 +30,7 @@ custom:
     value: bingo
 
   regionFullname:
-    desa: us-east-2
-    test: us-east-2
+    desa: us-east-1
     prod: us-east-1
 
   # healthDbDatasource: /digital-health/${self:provider.stage}/database/${self:custom.channelName.value}-db-datasource
@@ -47,7 +47,9 @@ functions:
     handler: dist/src/lambdas/tokenAuthorizer.handler
 
   createBingoGame:
-    handler: src/handlers/createBingoGame.handler
+    handler: dist/src/lambdas/createBingoGame.handler
+    environment:
+      BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
       - httpApi:
           path: /create
