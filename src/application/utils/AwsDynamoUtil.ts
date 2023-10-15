@@ -24,6 +24,22 @@ export class AwsDynamoUtil {
       return await documentClient.put(params).promise();
    }
 
+   static async scanRecords(table: string, region?: string) {
+      const documentClient = new DynamoDB.DocumentClient({
+         region: region || process.env.REGION,
+         maxRetries: 3,
+         httpOptions: {
+            timeout: 5000,
+         },
+      });
+
+      const params: DocumentClient.ScanInput = {
+         TableName: table,
+      };
+
+      return await documentClient.scan(params).promise();
+   }
+
    static async getRecord<T>(payload: PayloadGetDynamoDb<T>, region?: string) {
       const documentClient = new DynamoDB.DocumentClient({
          region: region || process.env.REGION,

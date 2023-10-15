@@ -1,7 +1,11 @@
 export interface ICallBingoNumbersRepository {
-   checkIfGameExists: (payload: any) => Promise<boolean>;
+   checkIfGameExists: (idGame: string) => Promise<boolean>;
 
-   checkCurrentNumbers: (payload: any) => Promise<object>;
+   checkCurrentNumbers: (idGame: string) => Promise<object>;
 
-   createFirstNumber: (payload: any) => Promise<void>;
+   createFirstNumber: (idGame: string) => Promise<void>;
+
+   createNextNumbers(payload: any): Promise<object>;
+
+   scanCards(): Promise<object>;
 }

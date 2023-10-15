@@ -76,7 +76,10 @@ functions:
           method: get
 
   checkBingoWinner:
-    handler: src/handlers/checkBingoWinner.handler
+    handler: dist/src/lambdas/checkBingoWinner.handler
+    environment:
+      BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
+      BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
       - httpApi:
           path: /check

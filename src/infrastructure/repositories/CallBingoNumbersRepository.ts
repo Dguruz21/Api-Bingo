@@ -16,33 +16,38 @@ export class CallBingoNumbersRepository implements ICallBingoNumbersRepository {
       this.cardTable = BINGO_CARD_TABLE || '';
    }
 
-   async checkIfGameExists(payload: any): Promise<boolean> {
+   async checkIfGameExists(idGame: string): Promise<boolean> {
       const exists = await AwsDynamoUtil.getRecord({
          TableName: this.bingoTable,
          Key: {
-            GameId: payload.GameId,
+            GameId: idGame,
          },
       });
       return !!exists;
    }
 
-   async checkCurrentNumbers(payload: any): Promise<object> {
+   async scanCards(): Promise<object> {
+      const data = await AwsDynamoUtil.scanRecords(this.cardTable);
+      return data;
+   }
+
+   async checkCurrentNumbers(idGame: string): Promise<object> {
       const data = await AwsDynamoUtil.getRecord({
          TableName: this.bingoTable,
          Key: {
-            GameId: payload.GameId,
+            GameId: idGame,
          },
       });
       return data;
    }
 
-   async createFirstNumber(payload: any): Promise<void> {
+   async createFirstNumber(idGame: string): Promise<void> {
       const firstRandomNumber = Math.floor(Math.random() * 75) + 1;
       await AwsDynamoUtil.updateRecord(
          {
             TableName: this.bingoTable,
             Key: {
-               GameId: payload.GameId,
+               GameId: idGame,
             },
             UpdateExpression: 'set numbers = :numbers',
             ExpressionAttributeValues: {
@@ -51,5 +56,31 @@ export class CallBingoNumbersRepository implements ICallBingoNumbersRepository {
             ReturnValues: 'UPDATED_NEW',
          }
       )
+   }
+
+   async createNextNumbers(payload: any): Promise<object> {
+
+      let number;
+
+      do {
+         number = Math.floor(Math.random() * 75) + 1;
+      } while (payload.currentBalls.includes(number));
+      payload.currentBalls.push(number);
+
+      await AwsDynamoUtil.updateRecord(
+         {
+            TableName: this.bingoTable,
+            Key: {
+               GameId: payload.gameId,
+            },
+            UpdateExpression: 'set numbers = :numbers',
+            ExpressionAttributeValues: {
+               ':numbers': new DynamoDB.DocumentClient().createSet(payload.currentBalls),
+            },
+            ReturnValues: 'UPDATED_NEW',
+         }
+      )
+
+      return payload.currentBalls;
    }
 }
