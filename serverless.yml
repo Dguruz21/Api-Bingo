@@ -57,11 +57,23 @@ functions:
           authorizer: tokenAuth
 
   createBingoCard:
-    handler: src/handlers/createBingoCard.handler
+    handler: dist/src/lambdas/createBingoCard.handler
+    environment:
+      BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
     events:
       - httpApi:
           path: /card
           method: post
+
+  callBingoNumbers:
+    handler: dist/src/lambdas/callBingoNumbers.handler
+    environment:
+      BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
+      BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
+    events:
+      - httpApi:
+          path: /call/{id}
+          method: get
 
   checkBingoWinner:
     handler: src/handlers/checkBingoWinner.handler
@@ -70,9 +82,3 @@ functions:
           path: /check
           method: post
 
-  callBingoNumbers:
-    handler: src/handlers/callBingoNumbers.handler
-    events:
-      - httpApi:
-          path: /call/{id}
-          method: get

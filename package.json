@@ -9,7 +9,9 @@
         "deploy": "serverless deploy -v",
         "build-layer": "rm -rdf ./dependencies/nodejs/node_modules && npm install && mv -f node_modules ./dependencies/nodejs/node_modules",
         "undeploy": "serverless remove",
-        "test-lambda:createBingoGame": "serverless invoke local --function createBingoGame --stage prod"
+        "test-lambda:createBingoGame": "serverless invoke local --function createBingoGame --stage prod",
+        "test-lambda:callBingoNumbers": "serverless invoke local --function callBingoNumbers"
+
     },
     "keywords": [],
     "author": "",

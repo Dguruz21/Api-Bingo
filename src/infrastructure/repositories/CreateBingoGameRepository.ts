@@ -1,21 +1,20 @@
 import { injectable } from "tsyringe";
 
-import { ICreateBingoGameRepository } from "../../application/interfaces/ICreateBingoGameRepository";
+import { ICreateBingoGameRepository } from "../../application/interfaces/IRepositories/ICreateBingoGameRepository";
 import { AwsDynamoUtil } from "../../application/utils/AwsDynamoUtil";
 
 @injectable()
 export class CreateBingoGameRepository implements ICreateBingoGameRepository {
-   private table: string;
+   private bingoTable: string;
 
    constructor() {
       const { BINGO_GAME_TABLE } = process.env;
-
-      this.table = BINGO_GAME_TABLE || 'no-se-encontro-tabla';
+      this.bingoTable = BINGO_GAME_TABLE || '';
    }
 
-   async create(payload: any): Promise<void> {
+   async createGame(payload: any): Promise<void> {
       await AwsDynamoUtil.createRecord({
-         TableName: this.table,
+         TableName: this.bingoTable,
          Item: payload
       });
    }

@@ -1,3 +1,3 @@
 export interface ICreateBingoGameRepository {
-   create: (payload: any) => Promise<void>;
+   createGame: (payload: any) => Promise<void>;
 }
