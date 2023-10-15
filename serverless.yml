@@ -18,7 +18,6 @@ provider:
     NAME: ${self:custom.projectName.value}-${self:provider.stage}
     STAGE: ${self:provider.stage}
   environment:
-    # HEALTH_DB_DATASOURCE: ${self:custom.healthDbDatasource}
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
   configValidationMode: error
@@ -33,55 +32,77 @@ custom:
     desa: us-east-1
     prod: us-east-1
 
-  # healthDbDatasource: /digital-health/${self:provider.stage}/database/${self:custom.channelName.value}-db-datasource
-
 package:
   individually: true
   patterns:
     - "!./**"
     - "dist/**"
     - "!dist/src/lambdas"
+    - "node_modules/**"
 
 functions:
-  tokenAuthorizer:
-    handler: dist/src/lambdas/tokenAuthorizer.handler
+  # tokenAuthorizer:
+  #   handler: dist/src/lambdas/tokenAuthorizer.handler
 
   createBingoGame:
     handler: dist/src/lambdas/createBingoGame.handler
+    package:
+      individually: true
+      patterns:
+        - 'dist/src/lambdas/createBingoGame.js'
     environment:
       BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
-      - httpApi:
+      - http:
           path: /create
           method: post
-          authorizer: tokenAuth
 
   createBingoCard:
     handler: dist/src/lambdas/createBingoCard.handler
+    package:
+      individually: true
+      patterns:
+        - 'dist/src/lambdas/createBingoCard.js'
     environment:
       BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
+      SQS_URL: ${ssm:/email-notification-${self:provider.stage}}
     events:
-      - httpApi:
+      - http:
           path: /card
           method: post
 
   callBingoNumbers:
     handler: dist/src/lambdas/callBingoNumbers.handler
+    package:
+      individually: true
+      patterns:
+        - 'dist/src/lambdas/callBingoNumbers.js'
     environment:
       BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
       BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
-      - httpApi:
-          path: /call/{id}
+      - http:
+          path: /call/{game_id}
           method: get
 
   checkBingoWinner:
     handler: dist/src/lambdas/checkBingoWinner.handler
+    package:
+      individually: true
+      patterns:
+        - 'dist/src/lambdas/checkBingoWinner.js'
     environment:
       BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
       BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
-      - httpApi:
+      - http:
           path: /check
           method: post
+
+  emailNotification:
+    handler: dist/src/lambdas/emailNotification.handler
+    package:
+      individually: true
+      patterns:
+        - 'dist/src/lambdas/emailNotification.js'
 

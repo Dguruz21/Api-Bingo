@@ -9,9 +9,11 @@
         "deploy": "serverless deploy -v",
         "build-layer": "rm -rdf ./dependencies/nodejs/node_modules && npm install && mv -f node_modules ./dependencies/nodejs/node_modules",
         "undeploy": "serverless remove",
-        "test-lambda:createBingoGame": "serverless invoke local --function createBingoGame --stage prod",
-        "test-lambda:callBingoNumbers": "serverless invoke local --function callBingoNumbers"
-
+        "test-lambda:createBingoGame": "serverless invoke local --function createBingoGame",
+        "test-lambda:callBingoNumbers": "serverless invoke local --function callBingoNumbers --path tests/mocks/requests/mockCallBingoNumbers.json",
+        "test-lambda:checkBingoWinner": "serverless invoke local --function checkBingoWinner --path tests/mocks/requests/mockCheckBingoWinner.json",
+        "test-lambda:createBingoCard": "serverless invoke local --function createBingoCard --path tests/mocks/requests/mockCreateBingoCard.json",
+        "test-lambda:emailNotification": "serverless invoke local --function emailNotification --path tests/mocks/requests/mockEmailNotification.json"
     },
     "keywords": [],
     "author": "",
@@ -47,9 +49,6 @@
         "aws-sdk": "^2.1004.0",
         "querystring": "^0.2.1",
         "reflect-metadata": "^0.1.13",
-        "tsyringe": "^4.7.0",
-        "typeorm": "^0.3.16",
-        "zod": "^3.9.8",
-        "mysql2": "^3.3.5"
+        "tsyringe": "^4.7.0"
     }
 }

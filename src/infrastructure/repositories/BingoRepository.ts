@@ -1,19 +1,34 @@
 import { injectable } from "tsyringe";
 import { DynamoDB } from "aws-sdk";
 
-import { ICallBingoNumbersRepository } from "../../application/interfaces/IRepositories/ICallBingoNumbersRepository";
+import { IBingoRepository } from "../../application/interfaces/IRepositories/IBingoRepository";
 import { AwsDynamoUtil } from "../../application/utils/AwsDynamoUtil";
 
 @injectable()
-export class CallBingoNumbersRepository implements ICallBingoNumbersRepository {
+export class BingoRepository implements IBingoRepository {
    private bingoTable: string;
    private cardTable: string;
 
    constructor() {
+
       const { BINGO_GAME_TABLE, BINGO_CARD_TABLE } = process.env;
 
       this.bingoTable = BINGO_GAME_TABLE || '';
       this.cardTable = BINGO_CARD_TABLE || '';
+   }
+
+   async createCard(payload: any): Promise<void> {
+      await AwsDynamoUtil.createRecord({
+         TableName: this.cardTable,
+         Item: payload
+      });
+   }
+
+   async createGame(payload: any): Promise<void> {
+      await AwsDynamoUtil.createRecord({
+         TableName: this.bingoTable,
+         Item: payload
+      });
    }
 
    async checkIfGameExists(idGame: string): Promise<boolean> {
@@ -21,6 +36,16 @@ export class CallBingoNumbersRepository implements ICallBingoNumbersRepository {
          TableName: this.bingoTable,
          Key: {
             GameId: idGame,
+         },
+      });
+      return !!exists;
+   }
+
+   async checkIfCardExists(idCard: string): Promise<boolean> {
+      const exists = await AwsDynamoUtil.getRecord({
+         TableName: this.cardTable,
+         Key: {
+            CardId: idCard,
          },
       });
       return !!exists;
@@ -36,6 +61,16 @@ export class CallBingoNumbersRepository implements ICallBingoNumbersRepository {
          TableName: this.bingoTable,
          Key: {
             GameId: idGame,
+         },
+      });
+      return data;
+   }
+
+   async getPlayerBalls(idCard: string): Promise<object> {
+      const data = await AwsDynamoUtil.getRecord({
+         TableName: this.cardTable,
+         Key: {
+            CardId: idCard,
          },
       });
       return data;
