@@ -1,6 +1,6 @@
-# Lambda-cleanarchitecture
+# Lambda-Bingo-Clean
 
-- clean architecture, DI, caching and Unit testing in AWS Lambda
+- clean architecture, DI and Unit testing in AWS Lambda
 
 # Installation
 
@@ -24,10 +24,4 @@
     serverless deploy
     o
     npm run deploy
-```
-
-- deploy locally
-
-```
-    serverless offline
 ```

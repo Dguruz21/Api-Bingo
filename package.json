@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "test": "jest --rootDir=./ --config ./jest.config.js --passWithNoTests --silent --noStackTrace",
-        "deploy": "serverless deploy -v",
+        "deploy": "serverless deploy",
         "build-layer": "rm -rdf ./dependencies/nodejs/node_modules && npm install && mv -f node_modules ./dependencies/nodejs/node_modules",
         "undeploy": "serverless remove",
         "test-lambda:createBingoGame": "serverless invoke local --function createBingoGame",
@@ -16,7 +16,7 @@
         "test-lambda:emailNotification": "serverless invoke local --function emailNotification --path tests/mocks/requests/mockEmailNotification.json"
     },
     "keywords": [],
-    "author": "",
+    "author": "Diego Acosta",
     "license": "ISC",
     "devDependencies": {
         "@babel/eslint-parser": "^7.15.8",

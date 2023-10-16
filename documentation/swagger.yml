@@ -10,7 +10,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: https://ysucgz8ir0.execute-api.us-east-1.amazonaws.com
+  - url: https://yapqtndlxf.execute-api.us-east-1.amazonaws.com/desa
 paths:
   /create-game:
     post:
@@ -49,16 +49,20 @@ paths:
                   type: string
                   description: The player declaring Bingo
          
-  /call/{gameId}:
-    get:
+  /call-numbers:
+    post:
       summary: Call numbers without repetition
-      parameters:
-        - name: gameId
-          in: path
-          required: true
-          description: The ID of the player
-          schema:
-            type: string
+      requestBody:
+        description: JSON request to Call numbers
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                game_id:
+                  type: string
+                  description: The player declaring Bingo
       responses:
         '200':
           description: A new ball added

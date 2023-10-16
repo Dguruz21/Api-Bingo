@@ -86,7 +86,7 @@ export class BingoRepository implements IBingoRepository {
             },
             UpdateExpression: 'set numbers = :numbers',
             ExpressionAttributeValues: {
-               ':numbers': DynamoDB.Converter.input([Number(firstRandomNumber)]),
+               ':numbers': new DynamoDB.DocumentClient().createSet([firstRandomNumber]),
             },
             ReturnValues: 'UPDATED_NEW',
          }

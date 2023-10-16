@@ -8,7 +8,6 @@ import { CreateBingoGameResult } from "../../domain/results/CreateBingoGameResul
 import { CreateBingoCardResult } from "../../domain/results/CreateBingoCardResult";
 import { GameError } from "../common/GameError";
 import { AwsSESUtil } from "../utils/AwsSESUtil";
-import { string } from "zod";
 import { BingoCardTemplateUtil } from "../utils/BingoCardTemplateUtil";
 import { PayloadSES } from "../../domain/models/PayloadSES";
 import { AwsSQSUtil } from "../utils/AwsSQSUtil";

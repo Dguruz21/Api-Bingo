@@ -40,10 +40,24 @@ package:
     - "!dist/src/lambdas"
     - "node_modules/**"
 
-functions:
-  # tokenAuthorizer:
-  #   handler: dist/src/lambdas/tokenAuthorizer.handler
+baseHeaders: &baseHeaders
+  - Content-Type
+  - X-Amz-Date
+  - Authorization
+  - X-Api-Key
+  - X-Amz-Security-Token
+  - X-Amz-User-Agent
+  - X-Amzn-Trace-Id
 
+baseEndpoint: &baseEndpoint
+#   private: true
+  cors:
+    origin: '*'
+    headers: 
+      *baseHeaders
+    allowCredentials: false
+
+functions:
   createBingoGame:
     handler: dist/src/lambdas/createBingoGame.handler
     package:
@@ -54,8 +68,9 @@ functions:
       BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
       - http:
-          path: /create
+          path: /create-game
           method: post
+          <<: *baseEndpoint
 
   createBingoCard:
     handler: dist/src/lambdas/createBingoCard.handler
@@ -68,8 +83,10 @@ functions:
       SQS_URL: ${ssm:/email-notification-${self:provider.stage}}
     events:
       - http:
-          path: /card
+          path: /create-card
           method: post
+          <<: *baseEndpoint
+
 
   callBingoNumbers:
     handler: dist/src/lambdas/callBingoNumbers.handler
@@ -82,8 +99,9 @@ functions:
       BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
       - http:
-          path: /call/{game_id}
-          method: get
+          path: /call-numbers
+          method: post
+          <<: *baseEndpoint
 
   checkBingoWinner:
     handler: dist/src/lambdas/checkBingoWinner.handler
@@ -96,8 +114,10 @@ functions:
       BINGO_GAME_TABLE: ${ssm:/bingo-game-table-${self:provider.stage}}
     events:
       - http:
-          path: /check
+          path: /check-winner
           method: post
+          <<: *baseEndpoint
+
 
   emailNotification:
     handler: dist/src/lambdas/emailNotification.handler

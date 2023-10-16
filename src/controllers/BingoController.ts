@@ -28,8 +28,9 @@ export class BingoController {
    }
 
    public async callNumbers(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-      const { game_id = "" } = event.pathParameters || {};
-      const response = await this.BingoService.executeCallNumbers(game_id);
+      const payload = event.body ? JSON.parse(event.body) : event;
+
+      const response = await this.BingoService.executeCallNumbers(payload.game_id);
 
       return ResponseUtil.response(response);
    }
