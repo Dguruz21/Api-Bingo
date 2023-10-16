@@ -42,7 +42,7 @@ export class BingoService implements IBingoService {
             await this.BingoRepository.createFirstNumber(gameId);
 
             return {
-               bolilla: firstRandomNumber,
+               bolilla: [firstRandomNumber],
             }
          } else if (bolillasdb.Item.numbers.values.length >= 24) {
 

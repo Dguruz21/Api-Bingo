@@ -32,23 +32,31 @@ export class BingoRepository implements IBingoRepository {
    }
 
    async checkIfGameExists(idGame: string): Promise<boolean> {
-      const exists = await AwsDynamoUtil.getRecord({
-         TableName: this.bingoTable,
-         Key: {
-            GameId: idGame,
-         },
-      });
-      return !!exists;
+      try {
+         const exists = await AwsDynamoUtil.getRecord({
+            TableName: this.bingoTable,
+            Key: {
+               GameId: idGame,
+            },
+         });
+         return exists.Item != undefined;
+      } catch (error) {
+         return false;
+      }
    }
 
    async checkIfCardExists(idCard: string): Promise<boolean> {
-      const exists = await AwsDynamoUtil.getRecord({
-         TableName: this.cardTable,
-         Key: {
-            CardId: idCard,
-         },
-      });
-      return !!exists;
+      try {
+         const exists = await AwsDynamoUtil.getRecord({
+            TableName: this.cardTable,
+            Key: {
+               CardId: idCard,
+            },
+         });
+         return exists.Item != undefined;
+      } catch (error) {
+         return false;
+      }
    }
 
    async scanCards(): Promise<object> {

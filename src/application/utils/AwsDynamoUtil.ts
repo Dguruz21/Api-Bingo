@@ -7,65 +7,44 @@ import { PayloadUpdateDynamoDb } from "../../domain/models/PayloadUpdateDynamoDb
 
 export class AwsDynamoUtil {
 
-   static async createRecord<T>(payload: PayloadDynamoDb<T>, region?: string) {
-      const documentClient = new DynamoDB.DocumentClient({
-         region: region || process.env.REGION,
-         maxRetries: 3,
-         httpOptions: {
-            timeout: 5000,
-         },
-      });
+   static DinamoDocumentClient = new DynamoDB.DocumentClient({
+      region: process.env.REGION,
+      maxRetries: 3,
+      httpOptions: {
+         timeout: 5000,
+      },
+   });
 
+
+   static async createRecord<T>(payload: PayloadDynamoDb<T>) {
       const params: DocumentClient.PutItemInput = {
          TableName: payload.TableName,
          Item: payload.Item as PutItemInput,
       };
 
-      return await documentClient.put(params).promise();
+      return await AwsDynamoUtil.DinamoDocumentClient.put(params).promise();
    }
 
-   static async scanRecords(table: string, region?: string) {
-      const documentClient = new DynamoDB.DocumentClient({
-         region: region || process.env.REGION,
-         maxRetries: 3,
-         httpOptions: {
-            timeout: 5000,
-         },
-      });
+   static async scanRecords(table: string) {
 
       const params: DocumentClient.ScanInput = {
          TableName: table,
       };
 
-      return await documentClient.scan(params).promise();
+      return await AwsDynamoUtil.DinamoDocumentClient.scan(params).promise();
    }
 
-   static async getRecord<T>(payload: PayloadGetDynamoDb<T>, region?: string) {
-      const documentClient = new DynamoDB.DocumentClient({
-         region: region || process.env.REGION,
-         maxRetries: 3,
-         httpOptions: {
-            timeout: 5000,
-         },
-      });
+   static async getRecord<T>(payload: PayloadGetDynamoDb<T>) {
 
       const params: DocumentClient.GetItemInput = {
          TableName: payload.TableName,
          Key: payload.Key as DynamoDB.DocumentClient.Key,
       };
 
-      return await documentClient.get(params).promise();
+      return await AwsDynamoUtil.DinamoDocumentClient.get(params).promise();
    }
 
-   static async updateRecord(payload: PayloadUpdateDynamoDb, region?: string) {
-      const documentClient = new DynamoDB.DocumentClient({
-         region: region || process.env.REGION,
-         maxRetries: 3,
-         httpOptions: {
-            timeout: 5000,
-         },
-      });
-
+   static async updateRecord(payload: PayloadUpdateDynamoDb) {
       const params = {
          TableName: payload.TableName,
          Key: payload.Key,
@@ -74,6 +53,6 @@ export class AwsDynamoUtil {
          ReturnValues: payload.ReturnValues,
       };
 
-      return await documentClient.update(params).promise();
+      return await AwsDynamoUtil.DinamoDocumentClient.update(params).promise();
    }
 }
