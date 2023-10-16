@@ -30,7 +30,6 @@ custom:
 
   regionFullname:
     desa: us-east-1
-    prod: us-east-1
 
 package:
   individually: true
@@ -50,7 +49,6 @@ baseHeaders: &baseHeaders
   - X-Amzn-Trace-Id
 
 baseEndpoint: &baseEndpoint
-#   private: true
   cors:
     origin: '*'
     headers: 
@@ -116,6 +114,20 @@ functions:
       - http:
           path: /check-winner
           method: post
+          <<: *baseEndpoint
+
+  getAllBingoCards:
+    handler: dist/src/lambdas/getAllBingoCards.handler
+    package:
+      individually: true
+      patterns:
+        - 'dist/src/lambdas/getAllBingoCards.js'
+    environment:
+      BINGO_CARD_TABLE: ${ssm:/bingo-card-table-${self:provider.stage}}
+    events:
+      - httpApi:
+          path: /all-cards
+          method: get
           <<: *baseEndpoint
 
 

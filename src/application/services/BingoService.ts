@@ -42,7 +42,7 @@ export class BingoService implements IBingoService {
             await this.BingoRepository.createFirstNumber(gameId);
 
             return {
-               bolilla: [firstRandomNumber],
+               balls: [firstRandomNumber],
             }
          } else if (bolillasdb.Item.numbers.values.length >= 24) {
 
@@ -63,7 +63,7 @@ export class BingoService implements IBingoService {
                      count++;
                      if (count === 24) {
                         return {
-                           response: "Hay ganador",
+                           message: "There's a Winner!",
                         }
                      }
                   }
@@ -71,16 +71,43 @@ export class BingoService implements IBingoService {
             }
          }
 
-         const response = await this.BingoRepository.createNextNumbers({ gameId: gameId, currentBalls: bolillasdb.Item.numbers.values });
+         const response = await this.BingoRepository.createNextNumbers({ gameId: gameId, currentBalls: bolillasdb.Item.numbers.values }) as number[];
 
          return {
-            bolillas: response,
+            amoutOfBalls: response.length,
+            balls: response,
          }
 
       } catch (error: any) {
          throw new CardError({
             httpCode: ServiceStatusEnum.InternalError,
             messages: `Error al llamar numero de Bingo ${error.message}`,
+         });
+      }
+   }
+
+   async executeGetAllCards(): Promise<object> {
+
+      try {
+
+
+         const data: any = await this.BingoRepository.scanCards();
+
+         if (data.Items.length === 0) {
+            return {
+               message: "No hay cartones creados",
+            }
+         } else {
+            return {
+               cards: data.Items,
+            }
+
+         }
+
+      } catch (error: any) {
+         throw new CardError({
+            httpCode: ServiceStatusEnum.InternalError,
+            messages: `Error al llamar tarjetas ${error.message}`,
          });
       }
    }
@@ -165,7 +192,7 @@ export class BingoService implements IBingoService {
 
          const card = generatedCard.map((column, index) => {
             if (index === 2) {
-               column.splice(2, 0, 0); // TODO:Add free space
+               column.splice(2, 0, 0);
             }
             return column;
          });
@@ -216,7 +243,21 @@ export class BingoService implements IBingoService {
       }
    }
 
-   //PRIVATE INTERNAL METHODS
+
+
+   private async consumerSqs(payload: PayloadSES) {
+      const params = {
+         MessageBody: JSON.stringify(payload),
+         QueueUrl: process.env.SQS_URL || 'no existe url'
+      };
+
+      try {
+         await AwsSQSUtil.execute(params);
+      } catch (error) {
+         console.log(error);
+      }
+   }
+
    private generateRandomBingoCard() {
       const bingoCard: number[][] = [];
 
@@ -245,19 +286,6 @@ export class BingoService implements IBingoService {
       const min = col * 15 + 1;
       const max = (col + 1) * 15;
       return Math.floor(Math.random() * (max - min + 1)) + min;
-   }
-
-   private async consumerSqs(payload: PayloadSES) {
-      const params = {
-         MessageBody: JSON.stringify(payload),
-         QueueUrl: process.env.SQS_URL || 'no existe url'
-      };
-
-      try {
-         await AwsSQSUtil.execute(params);
-      } catch (error) {
-         console.log(error);
-      }
    }
 
 }

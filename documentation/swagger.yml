@@ -12,6 +12,15 @@ info:
 servers:
   - url: https://yapqtndlxf.execute-api.us-east-1.amazonaws.com/desa
 paths:
+  /all-cards:
+    get:
+      summary: Get all cards generated
+      responses:
+        '200':
+          description: All cards listed
+          
+        '500':
+          description: Internal Error
   /create-game:
     post:
       summary: Create a new Bingo game

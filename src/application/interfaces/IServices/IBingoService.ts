@@ -8,4 +8,6 @@ export interface IBingoService {
    executeCreateCard(payload: any): Promise<CreateBingoCardResult>;
    executeCreateGame(): Promise<CreateBingoGameResult>;
    executeEmailNotification(payload: PayloadSES): Promise<void>;
+
+   executeGetAllCards(): Promise<object>;
 }

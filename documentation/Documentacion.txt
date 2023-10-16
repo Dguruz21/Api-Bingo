@@ -1,0 +1,22 @@
+Documentación de Uso del Juego de Bingo en Línea
+Introducción
+¡Bienvenido al juego! Este juego de bingo en línea te permite disfrutar del clásico juego desde la comodidad de tu hogar. 
+
+Reglas del Juego
+El objetivo del juego de bingo en línea es marcar los números llamados en tu cartilla hasta que completes un patrón específico. Solo hay un ganador si un jugador logra marcar 24 bolillas en todas las cartillas que han salido.
+
+Crear un Juego de Bingo: Inicia el juego creando un nuevo juego de bingo en línea. Define las reglas y el patrón de victoria.
+
+Envío de Cartillas: Las cartillas se enviarán por correo electrónico a los jugadores que participen en el juego. Cada jugador recibirá cartillas únicas.
+
+Selección de un Llamador: Designa a una persona como el llamador. Esta persona seleccionará al azar las bolas numeradas y las anunciará en el chat o por otros medios de comunicación.
+
+Comienzo del Juego: El juego comienza cuando el llamador selecciona una bola numerada y la anuncia junto con el ID del juego en curso.
+
+Marca de los Números: Los jugadores deben buscar y marcar el número llamado en sus cartillas. El sistema llevará un registro de los números llamados en el juego e internamente vericara si es que existe un ganador
+
+Patrones Ganadores: El juego continuará hasta que un jugador marque 24 bolillas en todas las cartillas que hayan salido. Este jugador gritará "¡Bingo!" y deberá verificar sus cartillas con el llamador para confirmar su victoria.
+
+
+Conclusion
+¡Esperamos que disfrutes jugando al bingo en línea! 

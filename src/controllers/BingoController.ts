@@ -27,6 +27,13 @@ export class BingoController {
       return ResponseUtil.response(response);
    }
 
+   public async getAllCards(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+
+      const response = await this.BingoService.executeGetAllCards();
+
+      return ResponseUtil.response(response);
+   }
+
    public async callNumbers(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
       const payload = event.body ? JSON.parse(event.body) : event;
 

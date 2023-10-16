@@ -13,7 +13,8 @@
         "test-lambda:callBingoNumbers": "serverless invoke local --function callBingoNumbers --path tests/mocks/requests/mockCallBingoNumbers.json",
         "test-lambda:checkBingoWinner": "serverless invoke local --function checkBingoWinner --path tests/mocks/requests/mockCheckBingoWinner.json",
         "test-lambda:createBingoCard": "serverless invoke local --function createBingoCard --path tests/mocks/requests/mockCreateBingoCard.json",
-        "test-lambda:emailNotification": "serverless invoke local --function emailNotification --path tests/mocks/requests/mockEmailNotification.json"
+        "test-lambda:emailNotification": "serverless invoke local --function emailNotification --path tests/mocks/requests/mockEmailNotification.json",
+        "test-lambda:getAllBingoCards": "serverless invoke local --function getAllBingoCards"
     },
     "keywords": [],
     "author": "Diego Acosta",
